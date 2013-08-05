@@ -1,0 +1,18 @@
+Etude AVK
+========================================================
+
+Nettoyage
+---------
+- donnéee originales sauvegardées au format Excel
+- copie de travail sauvegardée avec le même nom mais au format *odf*
+- modification des données de la copie de sauvegarde:
+  - suppression de la première ligne. La ligne 2 devient le header
+  - colonne *sexe* remplacement de 1 et 2 par H et F et de l'intitulé par *sexe*
+  - *metier* à la place de *diplôme* à cause del'accent circonflexe
+  - sage femme par SF
+  - étudiant kiné par EK
+  - étudiant pharmacie apar EP
+  - DE ambulancier par DEA
+  - étudiant manip RX par ERX
+- suppression des lignes vides à partir de la ligne 259
+- Q13 ligne 204: KA ?

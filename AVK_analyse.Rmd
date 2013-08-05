@@ -1,0 +1,84 @@
+AVK Analyse
+========================================================
+
+```{r}
+date()
+avk<-read.csv("TABLEAU_AVK7.csv",header=TRUE, sep=",")
+names(avk)
+str(avk)
+summary(avk)
+plot(avk$Q2,main="Question 2",xlab="A auditif, K kinesthésique, V visuel",ylab="effectifs")
+```
+AVK selon le diplome:
+---------------------
+```{r}
+table(avk$metier,avk$Q2)
+```
+
+Diagramme en radar: 3 graphes à 15 branches
+
+Faire la somme des lignes
+-------------------------
+Une ligne correspond à 1 sujet qui répond à 15 questions (Q2 à Q16) où chacune explore l'une des 3 composantes possible de la réponse: A = auditif, K = kinesthésie, V = visuel. En sommant le nombre de A, K, V par ligne on forme un score à 3 composantes pour chaque sujet.
+
+On forme une matrice *a* = *sujet* x *Questions* (la première question, intitulée Q2, correspod à la 6ème colonne du dataframe *avk*):
+```{r}
+a<-avk[6]
+for(i in 7:20){a<-cbind(a,avk[i])}
+```
+On forme *b*, la transposée de *a*:
+```{r}
+b<-t(a)
+b<-as.data.frame(b)
+```
+On applique à *b* la méthode *summary* pour calculer la score akv de la ligne et on agglomère les résultats dans la matrice *d*:
+```{r ,warning=FALSE}
+d<-summary(as.factor(b[,1]))
+for(i in 2:length(b)){d<-rbind(d,summary(as.factor(b[,i])))}
+```
+Enfin on concatène la matrice *d* (3 colonnes x 259 lignes) et la matrice *avk*:
+```{r}
+e<-cbind(avk,d)
+```
+Score par catégorie socio-professionnelle
+-----------------------------------------
+```{r}
+tapply(e$A,e$metier,mean)
+tapply(e$K,e$metier,mean)
+tapply(e$V,e$metier,mean)
+boxplot(e$A~e$metier)
+boxplot(e$K~e$metier)
+boxplot(e$V~e$metier)
+tapply(e$A,e$sexe,mean)
+tapply(e$K,e$sexe,mean)
+tapply(e$V,e$sexe,mean)
+```
+Dominante
+---------
+Hypothèse: dans certains groupes professionnel, une des 3 traits (visuel, kinesthésique, auditif) est dominant. On trouve dans les colonnes K, V, A la somme des réponses aux questions. Pour un individu, on choisit l'item correspondant oàa la somme maximale. Par exemple pour le sujet 1 on a: A=7 K=5 V=3. Son trait dominant est auditif.  
+Existe t-il un groupe où le trait K est dominant ?  
+Pour chaque ligne, on regarde si le trait dominant est K ou non (NK):
+```{r}
+for(i in 1:length(e)){e$trait[i]<-ifelse(e$K[i]==max(e[i,c("A","K","V")]),"K","NK")}
+summary(as.factor(e$trait))
+```
+On refait le meme calcul pour les autres caractéristiques:
+```{r}
+for(i in 1:length(e)){e$traitA[i]<-ifelse(e$A[i]==max(e[i,c("A","K","V")]),"A","NA")}
+summary(as.factor(e$traitA))
+for(i in 1:length(e)){e$traitV[i]<-ifelse(e$V[i]==max(e[i,c("A","K","V")]),"V","NV")}
+summary(as.factor(e$traitV))
+```
+#### Conclusion
+Les étudiants en science de la santé, quelque soit leur spécialité, sont très majoritairement des "visuels" (NB: la somme des 3 résultat dépasse le nombre de sujets en raison des ex-aequo). Génération "jeu vidéo" ?
+```{r}
+e$age<-2013-e$année.de.naissance
+summary(e$age)
+```
+sex ratio
+```{r}
+summary(e$sexe)
+```
+
+
+
