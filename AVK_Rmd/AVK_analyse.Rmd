@@ -3,7 +3,7 @@ AVK Analyse
 
 ```{r}
 date()
-avk<-read.csv("TABLEAU_AVK7.csv",header=TRUE, sep=",")
+avk<-read.csv("../data/TABLEAU_AVK7.csv",header=TRUE, sep=",")
 names(avk)
 str(avk)
 summary(avk)
