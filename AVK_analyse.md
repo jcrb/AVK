@@ -7,11 +7,12 @@ date()
 ```
 
 ```
-## [1] "Mon Aug  5 19:39:50 2013"
+## [1] "Wed Aug 14 10:12:27 2013"
 ```
 
 ```r
 avk <- read.csv("TABLEAU_AVK7.csv", header = TRUE, sep = ",")
+avk$age <- 2013 - avk$année.de.naissance
 names(avk)
 ```
 
@@ -22,7 +23,7 @@ names(avk)
 ## [10] "Q6"                 "Q7"                 "Q8"                
 ## [13] "Q9"                 "Q10"                "Q11"               
 ## [16] "Q12"                "Q13"                "Q14"               
-## [19] "Q15"                "Q16"
+## [19] "Q15"                "Q16"                "age"
 ```
 
 ```r
@@ -30,7 +31,7 @@ str(avk)
 ```
 
 ```
-## 'data.frame':	259 obs. of  20 variables:
+## 'data.frame':	259 obs. of  21 variables:
 ##  $ candidat          : int  1 2 3 4 5 6 7 8 9 10 ...
 ##  $ metier            : Factor w/ 6 levels "DEA","EIADE",..: 6 6 6 6 6 6 6 6 6 6 ...
 ##  $ session           : int  2013 2013 2013 2013 2013 2013 2013 2013 2013 2013 ...
@@ -51,6 +52,7 @@ str(avk)
 ##  $ Q14               : Factor w/ 3 levels "A","K","V": 3 3 1 3 1 2 2 3 1 3 ...
 ##  $ Q15               : Factor w/ 3 levels "A","K","V": 1 3 3 3 3 1 3 1 1 3 ...
 ##  $ Q16               : Factor w/ 3 levels "A","K","V": 1 1 2 3 2 1 2 2 3 2 ...
+##  $ age               : num  24 23 25 23 24 24 24 24 23 24 ...
 ```
 
 ```r
@@ -82,14 +84,14 @@ summary(avk)
 ##                                           NA's:  2                        
 ##                                                                           
 ##                                                                           
-##  Q16    
-##  A: 76  
-##  K: 77  
-##  V:106  
-##         
-##         
-##         
-## 
+##  Q16          age    
+##  A: 76   Min.   :19  
+##  K: 77   1st Qu.:21  
+##  V:106   Median :21  
+##          Mean   :23  
+##          3rd Qu.:23  
+##          Max.   :56  
+##          NA's   :3
 ```
 
 ```r
@@ -238,20 +240,111 @@ tapply(e$V, e$sexe, mean)
 
 Dominante
 ---------
-Hypothèse: dans certains groupes professionnel, une des 3 traits (visuel, kinesthésique, auditif) est dominant. On trouve dans les colonnes K, V, A la somme des réponses aux questions. Pour un individu, on choisit l'item correspondant oàa la somme maximale. Par exemple pour le sujet 1 on a: A=7 K=5 V=3. Son trait dominant est auditif.  
+Hypothèse: dans certains groupes professionnel, une des 3 traits (visuel, kinesthésique, auditif) est dominant. On trouve dans les colonnes K, V, A la somme des réponses aux questions. Pour un individu, on choisit l'item correspondant à la somme maximale. Par exemple pour le sujet 1 on a: A=7 K=5 V=3. Son trait dominant est auditif.  
+
+On met dans la colonne e$trait, le trait dominant:
+
+```r
+source("fct.R")
+e$trait <- as.factor(trait_dominant(e))
+summary(e$trait)
+```
+
+```
+##   A   K   V 
+##  98  48 113
+```
+
+#### Relation *trait* et *age*:
+
+```r
+tapply(e$age, e$trait, mean, na.rm = T)
+```
+
+```
+##     A     K     V 
+## 22.72 23.96 22.77
+```
+
+```r
+tapply(e$age, e$trait, sd, na.rm = T)
+```
+
+```
+##     A     K     V 
+## 4.124 6.236 4.163
+```
+
+Pas de diddérence entre les groupes
+
+#### Relation *trait* rt *métier*
+
+```r
+t <- table(e$metier, e$trait)
+t
+```
+
+```
+##        
+##          A  K  V
+##   DEA    5  6  9
+##   EIADE  8  3  9
+##   EK    27 15 34
+##   EP    32 14 40
+##   ERX   15  5 13
+##   SF    11  5  8
+```
+
+```r
+pt <- round(prop.table(t) * 100, 2)
+pt
+```
+
+```
+##        
+##             A     K     V
+##   DEA    1.93  2.32  3.47
+##   EIADE  3.09  1.16  3.47
+##   EK    10.42  5.79 13.13
+##   EP    12.36  5.41 15.44
+##   ERX    5.79  1.93  5.02
+##   SF     4.25  1.93  3.09
+```
+
+```r
+barplot(t, beside = T, col = 1:6, main = "Trait dominant et profession", ylab = "nombre", 
+    xlab = "A = Auditif, K = Kinesthésique V = Visuel")
+legend("topleft", 5, pch = 19, bty = "n", horiz = T, legend = c("DEA", "EIADE", 
+    "EK", "EP", "ERX", "SF"), cex = 0.8, col = 1:6)
+```
+
+![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-101.png) 
+
+```r
+
+barplot(t(t), beside = T, col = 2:4, main = "Trait dominant et profession", 
+    ylab = "nombre", xlab = "")
+legend("topleft", 5, pch = 19, bty = "n", horiz = T, legend = c("Auditif", "Kinesthésique", 
+    "Visuel"), cex = 0.8, col = 1:3)
+```
+
+![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-102.png) 
+
+
 Existe t-il un groupe où le trait K est dominant ?  
 Pour chaque ligne, on regarde si le trait dominant est K ou non (NK):
+** A revoir, le calcul est faux **
 
 ```r
 for (i in 1:length(e)) {
-    e$trait[i] <- ifelse(e$K[i] == max(e[i, c("A", "K", "V")]), "K", "NK")
+    e$traitK[i] <- ifelse(e$K[i] == max(e[i, c("A", "K", "V")]), "K", "NK")
 }
 summary(as.factor(e$trait))
 ```
 
 ```
-##   K  NK 
-##   6 253
+##   A   K   V 
+##  98  48 113
 ```
 
 On refait le meme calcul pour les autres caractéristiques:
@@ -265,7 +358,7 @@ summary(as.factor(e$traitA))
 
 ```
 ##   A  NA 
-## 246  13
+## 244  15
 ```
 
 ```r
@@ -277,7 +370,7 @@ summary(as.factor(e$traitV))
 
 ```
 ##  NV   V 
-## 249  10
+## 247  12
 ```
 
 #### Conclusion
