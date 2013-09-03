@@ -7,7 +7,15 @@ date()
 ```
 
 ```
-## [1] "Tue Aug 20 15:56:29 2013"
+## [1] "Tue Sep  3 19:01:09 2013"
+```
+
+```r
+getwd()
+```
+
+```
+## [1] "/home/sagec2/Documents/CESU/AVK/AVK_Rmd"
 ```
 
 ```r
@@ -195,19 +203,19 @@ tapply(e$V, e$metier, mean)
 boxplot(e$A ~ e$metier)
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-71.png) 
+![plot of chunk metier](figure/metier1.png) 
 
 ```r
 boxplot(e$K ~ e$metier)
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-72.png) 
+![plot of chunk metier](figure/metier2.png) 
 
 ```r
 boxplot(e$V ~ e$metier)
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-73.png) 
+![plot of chunk metier](figure/metier3.png) 
 
 ```r
 tapply(e$A, e$sexe, mean)
@@ -302,6 +310,120 @@ summary(e$sexe)
 ```
 ##    F    H NA's 
 ##  165   90    4
+```
+
+Analyse 2
+==========
+
+
+```r
+source("../fct.R")
+e$trait <- trait_dominant(e)
+summary(as.factor(e$trait))
+```
+
+```
+##   A   K   V 
+##  98  48 113
+```
+
+```r
+apply(e$age, e$trait, mean, na.rm = T)
+```
+
+```
+## Error: dim(X) must have a positive length
+```
+
+```r
+table(e$metier, e$trait)
+```
+
+```
+##        
+##          A  K  V
+##   DEA    5  6  9
+##   EIADE  8  3  9
+##   EK    27 15 34
+##   EP    32 14 40
+##   ERX   15  5 13
+##   SF    11  5  8
+```
+
+```r
+t <- table(e$metier, e$trait)
+t
+```
+
+```
+##        
+##          A  K  V
+##   DEA    5  6  9
+##   EIADE  8  3  9
+##   EK    27 15 34
+##   EP    32 14 40
+##   ERX   15  5 13
+##   SF    11  5  8
+```
+
+```r
+round(prop.table(t, margin = 1) * 100, 2)
+```
+
+```
+##        
+##             A     K     V
+##   DEA   25.00 30.00 45.00
+##   EIADE 40.00 15.00 45.00
+##   EK    35.53 19.74 44.74
+##   EP    37.21 16.28 46.51
+##   ERX   45.45 15.15 39.39
+##   SF    45.83 20.83 33.33
+```
+
+```r
+barplot(t, beside = T, col = 1:6, main = "Trait dominant et profession", ylab = "nombre", 
+    xlab = "A = Auditif, K = Kinesthésique V = Visuel")
+legend("topleft", 5, pch = 19, bty = "n", horiz = T, legend = c("DEA", "EIADE", 
+    "EK", "EP", "ERX", "SF"), cex = 0.6, col = 1:6)
+```
+
+![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-111.png) 
+
+```r
+
+barplot(t(t), beside = T, col = 2:4, main = "Trait dominant et profession", 
+    ylab = "nombre", xlab = "")
+legend("topleft", 5, pch = 19, bty = "n", horiz = T, legend = c("Auditif", "Kinesthésique", 
+    "Visuel"), cex = 0.6, col = 1:3)
+```
+
+![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-112.png) 
+
+```r
+
+
+tapply(e$age, e$trait, var, na.rm = T)
+```
+
+```
+##     A     K     V 
+## 17.00 38.89 17.33
+```
+
+```r
+tapply(e$age, e$trait, sd, na.rm = T)
+```
+
+```
+##     A     K     V 
+## 4.124 6.236 4.163
+```
+
+```r
+
+
+a <- summary(t(e[, c(6:20)]))
 ```
 
 
