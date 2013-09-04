@@ -7,7 +7,7 @@ date()
 ```
 
 ```
-## [1] "Tue Sep  3 19:01:09 2013"
+## [1] "Wed Sep  4 10:25:59 2013"
 ```
 
 ```r
@@ -15,11 +15,15 @@ getwd()
 ```
 
 ```
-## [1] "/home/sagec2/Documents/CESU/AVK/AVK_Rmd"
+## [1] "/home/jcb/Documents/CESU/Travaux/AVK/AVK_Rmd"
 ```
 
 ```r
 avk <- read.csv("../data/TABLEAU_AVK7.csv", header = TRUE, sep = ",")
+# élimination d'une valeur fausse;
+avk[203, 13] <- NA
+avk$age <- 2013 - avk$année.de.naissance
+
 names(avk)
 ```
 
@@ -30,7 +34,7 @@ names(avk)
 ## [10] "Q6"                 "Q7"                 "Q8"                
 ## [13] "Q9"                 "Q10"                "Q11"               
 ## [16] "Q12"                "Q13"                "Q14"               
-## [19] "Q15"                "Q16"
+## [19] "Q15"                "Q16"                "age"
 ```
 
 ```r
@@ -38,7 +42,7 @@ str(avk)
 ```
 
 ```
-## 'data.frame':	259 obs. of  20 variables:
+## 'data.frame':	259 obs. of  21 variables:
 ##  $ candidat          : int  1 2 3 4 5 6 7 8 9 10 ...
 ##  $ metier            : Factor w/ 6 levels "DEA","EIADE",..: 6 6 6 6 6 6 6 6 6 6 ...
 ##  $ session           : int  2013 2013 2013 2013 2013 2013 2013 2013 2013 2013 ...
@@ -59,6 +63,7 @@ str(avk)
 ##  $ Q14               : Factor w/ 3 levels "A","K","V": 3 3 1 3 1 2 2 3 1 3 ...
 ##  $ Q15               : Factor w/ 3 levels "A","K","V": 1 3 3 3 3 1 3 1 1 3 ...
 ##  $ Q16               : Factor w/ 3 levels "A","K","V": 1 1 2 3 2 1 2 2 3 2 ...
+##  $ age               : num  24 23 25 23 24 24 24 24 23 24 ...
 ```
 
 ```r
@@ -84,20 +89,20 @@ summary(avk)
 ##                                                                     
 ##     Q9        Q10        Q11      Q12       Q13        Q14        Q15     
 ##  A   :194   A   :102   A   : 94   A: 30   A   :115   A   : 84   A   : 22  
-##  K   : 14   K   : 31   K   : 49   K:206   K   : 62   K   : 40   K   : 65  
+##  K   : 13   K   : 31   K   : 49   K:206   K   : 62   K   : 40   K   : 65  
 ##  V   : 50   V   :124   V   :115   V: 23   KA  :  1   V   :134   V   :171  
-##  NA's:  1   NA's:  2   NA's:  1           V   : 79   NA's:  1   NA's:  1  
+##  NA's:  2   NA's:  2   NA's:  1           V   : 79   NA's:  1   NA's:  1  
 ##                                           NA's:  2                        
 ##                                                                           
 ##                                                                           
-##  Q16    
-##  A: 76  
-##  K: 77  
-##  V:106  
-##         
-##         
-##         
-## 
+##  Q16          age    
+##  A: 76   Min.   :19  
+##  K: 77   1st Qu.:21  
+##  V:106   Median :21  
+##          Mean   :23  
+##          3rd Qu.:23  
+##          Max.   :56  
+##          NA's   :3
 ```
 
 ```r
@@ -111,7 +116,8 @@ AVK selon le diplome:
 ---------------------
 
 ```r
-table(avk$metier, avk$Q2)
+t <- table(avk$metier, avk$Q2)
+t
 ```
 
 ```
@@ -123,6 +129,185 @@ table(avk$metier, avk$Q2)
 ##   EP     7 10 69
 ##   ERX    4  3 26
 ##   SF     2  3 19
+```
+
+```r
+round(prop.table(t, margin = 1) * 100, 2)
+```
+
+```
+##        
+##             A     K     V
+##   DEA   15.00 15.00 70.00
+##   EIADE  0.00 10.00 90.00
+##   EK     3.95 10.53 85.53
+##   EP     8.14 11.63 80.23
+##   ERX   12.12  9.09 78.79
+##   SF     8.33 12.50 79.17
+```
+
+```r
+
+
+for (i in 6:20) {
+    print("")
+    print(paste("Question", i))
+    t <- table(avk$metier, avk[, i])
+    print(round(prop.table(t, margin = 1) * 100, 2))
+}
+```
+
+```
+## [1] ""
+## [1] "Question 6"
+##        
+##             A     K     V
+##   DEA   15.00 15.00 70.00
+##   EIADE  0.00 10.00 90.00
+##   EK     3.95 10.53 85.53
+##   EP     8.14 11.63 80.23
+##   ERX   12.12  9.09 78.79
+##   SF     8.33 12.50 79.17
+## [1] ""
+## [1] "Question 7"
+##        
+##             A     K     V
+##   DEA    5.00 40.00 55.00
+##   EIADE 10.00 20.00 70.00
+##   EK    13.16 18.42 68.42
+##   EP    17.44 16.28 66.28
+##   ERX   12.50 37.50 50.00
+##   SF    12.50 20.83 66.67
+## [1] ""
+## [1] "Question 8"
+##        
+##             A     K     V
+##   DEA   60.00 15.00 25.00
+##   EIADE 45.00 25.00 30.00
+##   EK    77.63 11.84 10.53
+##   EP    74.42 16.28  9.30
+##   ERX   72.73 12.12 15.15
+##   SF    79.17  4.17 16.67
+## [1] ""
+## [1] "Question 9"
+##        
+##             A     K     V
+##   DEA   55.00 40.00  5.00
+##   EIADE 25.00 40.00 35.00
+##   EK    44.00 28.00 28.00
+##   EP    45.35 16.28 38.37
+##   ERX   39.39 33.33 27.27
+##   SF    58.33 20.83 20.83
+## [1] ""
+## [1] "Question 10"
+##        
+##             A     K     V
+##   DEA   25.00 50.00 25.00
+##   EIADE 40.00 45.00 15.00
+##   EK    39.47 43.42 17.11
+##   EP    39.53 44.19 16.28
+##   ERX   51.52 33.33 15.15
+##   SF    41.67 50.00  8.33
+## [1] ""
+## [1] "Question 11"
+##        
+##             A     K     V
+##   DEA   10.00 50.00 40.00
+##   EIADE 21.05 63.16 15.79
+##   EK    14.47 55.26 30.26
+##   EP     4.76 55.95 39.29
+##   ERX    6.06 66.67 27.27
+##   SF    18.18 63.64 18.18
+## [1] ""
+## [1] "Question 12"
+##        
+##             A     K     V
+##   DEA   35.00 30.00 35.00
+##   EIADE 20.00 30.00 50.00
+##   EK    25.33 53.33 21.33
+##   EP    24.71 47.06 28.24
+##   ERX   32.26 38.71 29.03
+##   SF    45.83 33.33 20.83
+## [1] ""
+## [1] "Question 13"
+##        
+##             A     K     V
+##   DEA   70.00  5.00 25.00
+##   EIADE 73.68  0.00 26.32
+##   EK    77.33  4.00 18.67
+##   EP    73.26  6.98 19.77
+##   ERX   69.70  9.09 21.21
+##   SF    91.67  0.00  8.33
+## [1] ""
+## [1] "Question 14"
+##        
+##             A     K     V
+##   DEA   35.00 30.00 35.00
+##   EIADE 50.00 15.00 35.00
+##   EK    33.33  6.67 60.00
+##   EP    43.02 10.47 46.51
+##   ERX   43.75  9.38 46.88
+##   SF    37.50 20.83 41.67
+## [1] ""
+## [1] "Question 15"
+##        
+##             A     K     V
+##   DEA   35.00 30.00 35.00
+##   EIADE 42.11 10.53 47.37
+##   EK    31.58 18.42 50.00
+##   EP    37.21 20.93 41.86
+##   ERX   45.45 15.15 39.39
+##   SF    33.33 16.67 50.00
+## [1] ""
+## [1] "Question 16"
+##        
+##             A     K     V
+##   DEA   10.00 80.00 10.00
+##   EIADE 15.00 50.00 35.00
+##   EK    17.11 78.95  3.95
+##   EP    12.79 77.91  9.30
+##   ERX    3.03 90.91  6.06
+##   SF     0.00 95.83  4.17
+## [1] ""
+## [1] "Question 17"
+##        
+##             A     K    KA     V
+##   DEA   65.00 25.00  0.00 10.00
+##   EIADE 40.00 30.00  0.00 30.00
+##   EK    43.42 26.32  1.32 28.95
+##   EP    45.35 20.93  0.00 33.72
+##   ERX   46.88 18.75  0.00 34.38
+##   SF    30.43 30.43  0.00 39.13
+## [1] ""
+## [1] "Question 18"
+##        
+##             A     K     V
+##   DEA   20.00 25.00 55.00
+##   EIADE 20.00 20.00 60.00
+##   EK    32.89 15.79 51.32
+##   EP    34.88 12.79 52.33
+##   ERX   43.75 18.75 37.50
+##   SF    29.17  8.33 62.50
+## [1] ""
+## [1] "Question 19"
+##        
+##             A     K     V
+##   DEA    0.00 30.00 70.00
+##   EIADE  5.00 15.00 80.00
+##   EK     9.21 30.26 60.53
+##   EP     6.98 27.91 65.12
+##   ERX   12.12 15.15 72.73
+##   SF    17.39 17.39 65.22
+## [1] ""
+## [1] "Question 20"
+##        
+##             A     K     V
+##   DEA   20.00 30.00 50.00
+##   EIADE 35.00 25.00 40.00
+##   EK    30.26 38.16 31.58
+##   EP    24.42 30.23 45.35
+##   ERX   33.33 12.12 54.55
+##   SF    41.67 29.17 29.17
 ```
 
 
@@ -187,7 +372,7 @@ tapply(e$K, e$metier, mean)
 
 ```
 ##   DEA EIADE    EK    EP   ERX    SF 
-## 4.950 4.700 4.395 4.140 4.394 4.167
+## 4.950 4.700 4.382 4.140 4.394 4.167
 ```
 
 ```r
@@ -232,7 +417,7 @@ tapply(e$K, e$sexe, mean)
 
 ```
 ##     F     H 
-## 4.273 4.433
+## 4.267 4.433
 ```
 
 ```r
@@ -246,13 +431,128 @@ tapply(e$V, e$sexe, mean)
 
 Dominante
 ---------
-Hypothèse: dans certains groupes professionnel, une des 3 traits (visuel, kinesthésique, auditif) est dominant. On trouve dans les colonnes K, V, A la somme des réponses aux questions. Pour un individu, on choisit l'item correspondant oàa la somme maximale. Par exemple pour le sujet 1 on a: A=7 K=5 V=3. Son trait dominant est auditif.  
+Hypothèse: dans certains groupes professionnel, une des 3 traits (visuel, kinesthésique, auditif) est dominant. On trouve dans les colonnes K, V, A la somme des réponses aux questions. Pour un individu, on choisit l'item correspondant à la somme maximale. Par exemple pour le sujet 1 on a: A=7 K=5 V=3. Son trait dominant est auditif.  
+
+On met dans la colonne e$trait, le trait dominant:
+
+```r
+source("fct.R")
+```
+
+```
+## Warning: impossible d'ouvrir le fichier 'fct.R' : Aucun fichier ou dossier
+## de ce type
+```
+
+```
+## Error: impossible d'ouvrir la connexion
+```
+
+```r
+e$trait <- as.factor(trait_dominant(e))
+```
+
+```
+## Error: impossible de trouver la fonction "trait_dominant"
+```
+
+```r
+summary(e$trait)
+```
+
+```
+## Length  Class   Mode 
+##      0   NULL   NULL
+```
+
+#### Relation *trait* et *age*:
+
+```r
+tapply(e$age, e$trait, mean, na.rm = T)
+```
+
+```
+## Error: arguments must have same length
+```
+
+```r
+tapply(e$age, e$trait, sd, na.rm = T)
+```
+
+```
+## Error: arguments must have same length
+```
+
+Pas de diddérence entre les groupes
+
+#### Relation *trait* rt *métier*
+
+```r
+t <- table(e$metier, e$trait)
+```
+
+```
+## Error: all arguments must have the same length
+```
+
+```r
+t
+```
+
+```
+##        
+##          A  K  V
+##   DEA    4  6 10
+##   EIADE  7  5  8
+##   EK    23 29 24
+##   EP    21 26 39
+##   ERX   11  4 18
+##   SF    10  7  7
+```
+
+```r
+pt <- round(prop.table(t) * 100, 2)
+pt
+```
+
+```
+##        
+##             A     K     V
+##   DEA    1.54  2.32  3.86
+##   EIADE  2.70  1.93  3.09
+##   EK     8.88 11.20  9.27
+##   EP     8.11 10.04 15.06
+##   ERX    4.25  1.54  6.95
+##   SF     3.86  2.70  2.70
+```
+
+```r
+barplot(t, beside = T, col = 1:6, main = "Trait dominant et profession", ylab = "nombre", 
+    xlab = "A = Auditif, K = Kinesthésique V = Visuel")
+legend("topleft", 5, pch = 19, bty = "n", horiz = T, legend = c("DEA", "EIADE", 
+    "EK", "EP", "ERX", "SF"), cex = 0.8, col = 1:6)
+```
+
+![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-91.png) 
+
+```r
+
+barplot(t(t), beside = T, col = 2:4, main = "Trait dominant et profession", 
+    ylab = "nombre", xlab = "")
+legend("topleft", 5, pch = 19, bty = "n", horiz = T, legend = c("Auditif", "Kinesthésique", 
+    "Visuel"), cex = 0.8, col = 1:3)
+```
+
+![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-92.png) 
+
+
 Existe t-il un groupe où le trait K est dominant ?  
 Pour chaque ligne, on regarde si le trait dominant est K ou non (NK):
+** A revoir, le calcul est faux **
 
 ```r
 for (i in 1:length(e)) {
-    e$trait[i] <- ifelse(e$K[i] == max(e[i, c("A", "K", "V")]), "K", "NK")
+    e$traitK[i] <- ifelse(e$K[i] == max(e[i, c("A", "K", "V")]), "K", "NK")
 }
 summary(as.factor(e$trait))
 ```
@@ -273,7 +573,7 @@ summary(as.factor(e$traitA))
 
 ```
 ##   A  NA 
-## 246  13
+## 245  14
 ```
 
 ```r
@@ -285,7 +585,7 @@ summary(as.factor(e$traitV))
 
 ```
 ##  NV   V 
-## 249  10
+## 248  11
 ```
 
 #### Conclusion
@@ -323,8 +623,8 @@ summary(as.factor(e$trait))
 ```
 
 ```
-##   A   K   V 
-##  98  48 113
+##   A   K  NA   V 
+##  70  47  36 106
 ```
 
 ```r
@@ -341,13 +641,13 @@ table(e$metier, e$trait)
 
 ```
 ##        
-##          A  K  V
-##   DEA    5  6  9
-##   EIADE  8  3  9
-##   EK    27 15 34
-##   EP    32 14 40
-##   ERX   15  5 13
-##   SF    11  5  8
+##          A  K NA  V
+##   DEA    4  6  1  9
+##   EIADE  3  3  6  8
+##   EK    22 14 10 30
+##   EP    23 14 10 39
+##   ERX    9  5  6 13
+##   SF     9  5  3  7
 ```
 
 ```r
@@ -357,13 +657,13 @@ t
 
 ```
 ##        
-##          A  K  V
-##   DEA    5  6  9
-##   EIADE  8  3  9
-##   EK    27 15 34
-##   EP    32 14 40
-##   ERX   15  5 13
-##   SF    11  5  8
+##          A  K NA  V
+##   DEA    4  6  1  9
+##   EIADE  3  3  6  8
+##   EK    22 14 10 30
+##   EP    23 14 10 39
+##   ERX    9  5  6 13
+##   SF     9  5  3  7
 ```
 
 ```r
@@ -372,13 +672,13 @@ round(prop.table(t, margin = 1) * 100, 2)
 
 ```
 ##        
-##             A     K     V
-##   DEA   25.00 30.00 45.00
-##   EIADE 40.00 15.00 45.00
-##   EK    35.53 19.74 44.74
-##   EP    37.21 16.28 46.51
-##   ERX   45.45 15.15 39.39
-##   SF    45.83 20.83 33.33
+##             A     K    NA     V
+##   DEA   20.00 30.00  5.00 45.00
+##   EIADE 15.00 15.00 30.00 40.00
+##   EK    28.95 18.42 13.16 39.47
+##   EP    26.74 16.28 11.63 45.35
+##   ERX   27.27 15.15 18.18 39.39
+##   SF    37.50 20.83 12.50 29.17
 ```
 
 ```r
@@ -388,7 +688,7 @@ legend("topleft", 5, pch = 19, bty = "n", horiz = T, legend = c("DEA", "EIADE",
     "EK", "EP", "ERX", "SF"), cex = 0.6, col = 1:6)
 ```
 
-![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-111.png) 
+![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-141.png) 
 
 ```r
 
@@ -398,7 +698,7 @@ legend("topleft", 5, pch = 19, bty = "n", horiz = T, legend = c("Auditif", "Kine
     "Visuel"), cex = 0.6, col = 1:3)
 ```
 
-![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-112.png) 
+![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-142.png) 
 
 ```r
 
@@ -407,8 +707,8 @@ tapply(e$age, e$trait, var, na.rm = T)
 ```
 
 ```
-##     A     K     V 
-## 17.00 38.89 17.33
+##     A     K    NA     V 
+## 12.04 39.54 32.99 15.20
 ```
 
 ```r
@@ -416,15 +716,201 @@ tapply(e$age, e$trait, sd, na.rm = T)
 ```
 
 ```
-##     A     K     V 
-## 4.124 6.236 4.163
+##     A     K    NA     V 
+## 3.470 6.288 5.744 3.898
 ```
 
 ```r
 
 
 a <- summary(t(e[, c(6:20)]))
+a
 ```
+
+```
+##  V1    V2       V3    V4       V5    V6    V7    V8    V9    V10  
+##  A:7   A:5   A   :2   A:3   A   :4   A:6   A:3   A:6   A:9   A:5  
+##  K:5   K:6   K   :7   K:4   K   :4   K:7   K:6   K:3   K:3   K:4  
+##  V:3   V:4   V   :5   V:8   V   :6   V:2   V:6   V:6   V:3   V:6  
+##              NA's:1         NA's:1                                
+##                                                                   
+##    V11    V12     V13    V14   V15   V16   V17   V18   V19   V20   V21  
+##  A   :3   A:3   A   :7   A:5   A:6   A:4   A:6   A:9   A:8   A:7   A:3  
+##  K   :5   K:3   K   :2   K:6   K:4   K:6   K:3   K:2   K:2   K:3   K:3  
+##  V   :6   V:9   V   :5   V:4   V:5   V:5   V:6   V:4   V:5   V:5   V:9  
+##  NA's:1         NA's:1                                                  
+##                                                                         
+##  V22   V23   V24   V25   V26   V27   V28   V29   V30   V31   V32   V33  
+##  A:7   A:5   A:7   A:4   A:5   A:3   A:3   A:3   A:8   A:6   A:4   A:5  
+##  K:6   K:3   K:3   K:6   K:3   K:6   K:5   K:3   K:4   K:4   K:4   K:3  
+##  V:2   V:7   V:5   V:5   V:7   V:6   V:7   V:9   V:3   V:5   V:7   V:7  
+##                                                                         
+##                                                                         
+##  V34   V35   V36   V37   V38   V39   V40   V41   V42   V43     V44   
+##  A:6   A:7   A:7   A:2   A:6   A:6   A:5   A:2   A:4   A:6   A   :2  
+##  K:5   K:6   K:3   K:6   K:2   K:5   K:6   K:8   K:8   K:3   K   :6  
+##  V:4   V:2   V:5   V:7   V:7   V:4   V:4   V:5   V:3   V:6   V   :5  
+##                                                              NA's:2  
+##                                                                      
+##  V45   V46   V47   V48   V49   V50   V51   V52   V53   V54   V55   V56  
+##  A:4   A:6   A:2   A:4   A:4   A:7   A:2   A:5   A:9   A:6   A:3   A:2  
+##  K:7   K:4   K:7   K:5   K:3   K:2   K:9   K:4   K:2   K:4   K:6   K:7  
+##  V:4   V:5   V:6   V:6   V:8   V:6   V:4   V:6   V:4   V:5   V:6   V:6  
+##                                                                         
+##                                                                         
+##  V57   V58   V59     V60    V61   V62   V63   V64   V65    V66   V67  
+##  A:6   A:7   A:7   A   :7   A:4   A:3   A:4   A:8   A: 2   A:5   A:5  
+##  K:3   K:2   K:1   V   :7   K:3   K:9   K:5   K:4   K: 3   K:5   K:4  
+##  V:6   V:6   V:7   NA's:1   V:8   V:3   V:6   V:3   V:10   V:5   V:6  
+##                                                                       
+##                                                                       
+##    V68    V69   V70   V71      V72    V73   V74   V75   V76    V77   V78  
+##  A   :7   A:1   A:7   A: 3   K   :7   A:3   A:3   A:4   A: 1   A:5   A:4  
+##  K   :4   K:7   V:8   K: 2   V   :7   K:9   K:5   K:4   K: 2   K:5   K:4  
+##  V   :3   V:7         V:10   NA's:1   V:3   V:7   V:7   V:12   V:5   V:7  
+##  NA's:1                                                                   
+##                                                                           
+##  V79   V80   V81   V82   V83   V84   V85   V86   V87   V88   V89   V90  
+##  A:3   A:4   A:7   A:4   A:7   A:6   A:3   A:5   A:5   A:6   A:5   A:4  
+##  K:7   K:4   K:6   K:2   K:4   K:4   K:4   K:2   K:6   K:3   K:3   K:5  
+##  V:5   V:7   V:2   V:9   V:4   V:5   V:8   V:8   V:4   V:6   V:7   V:6  
+##                                                                         
+##                                                                         
+##    V91      V92    V93   V94   V95   V96   V97   V98   V99   V100  V101 
+##  A   :3   A   :6   A:4   A:3   A:1   A:7   A:5   A:4   A:4   A:6   A:1  
+##  K   :3   K   :2   K:4   K:3   K:9   K:3   K:6   K:4   K:5   K:6   K:6  
+##  V   :8   V   :6   V:7   V:9   V:5   V:5   V:4   V:7   V:6   V:3   V:8  
+##  NA's:1   NA's:1                                                        
+##                                                                         
+##    V102   V103  V104  V105  V106  V107  V108  V109  V110  V111  V112 
+##  A   :6   A:7   A:3   A:8   A:7   A:7   A:3   A:2   A:7   A:4   A:3  
+##  K   :5   K:3   K:4   K:1   K:3   K:3   K:9   K:8   K:6   K:5   K:7  
+##  V   :3   V:5   V:8   V:6   V:5   V:5   V:3   V:5   V:2   V:6   V:5  
+##  NA's:1                                                              
+##                                                                      
+##  V113  V114  V115  V116  V117  V118  V119   V120  V121  V122  V123  V124 
+##  A:7   A:4   A:7   A:7   A:6   A:3   A:11   A:4   A:5   A:5   A:2   A:7  
+##  K:4   K:3   K:2   K:3   K:4   K:4   K: 1   K:2   K:4   K:2   K:6   K:1  
+##  V:4   V:8   V:6   V:5   V:5   V:8   V: 3   V:9   V:6   V:8   V:7   V:7  
+##                                                                          
+##                                                                          
+##  V125  V126  V127  V128  V129  V130  V131  V132  V133  V134  V135  V136 
+##  A:2   A:7   A:3   A:3   A:6   A:4   A:6   A:3   A:6   A:2   A:9   A:8  
+##  K:7   K:2   K:6   K:3   K:4   K:7   K:5   K:7   K:2   K:6   K:5   K:3  
+##  V:6   V:6   V:6   V:9   V:5   V:4   V:4   V:5   V:7   V:7   V:1   V:4  
+##                                                                         
+##                                                                         
+##  V137  V138  V139  V140  V141  V142  V143   V144  V145  V146  V147  V148 
+##  A:7   A:3   A:5   A:3   A:6   A:3   A: 3   A:5   A:4   A:6   A:5   A:5  
+##  K:5   K:3   K:4   K:4   K:1   K:3   K: 2   K:5   K:6   K:4   K:3   K:4  
+##  V:3   V:9   V:6   V:8   V:8   V:9   V:10   V:5   V:5   V:5   V:7   V:6  
+##                                                                          
+##                                                                          
+##  V149  V150  V151  V152  V153  V154  V155  V156  V157  V158  V159  V160 
+##  A:3   A:9   A:6   A:6   A:6   A:5   A:4   A:4   A:4   A:4   A:5   A:7  
+##  K:3   K:3   K:6   K:2   K:2   K:3   K:6   K:6   K:4   K:5   K:5   K:1  
+##  V:9   V:3   V:3   V:7   V:7   V:7   V:5   V:5   V:7   V:6   V:5   V:7  
+##                                                                         
+##                                                                         
+##  V161   V162  V163  V164  V165  V166  V167  V168  V169  V170  V171  V172 
+##  A: 3   A:6   A:4   A:8   A:5   A:7   A:5   A:3   A:6   A:7   A:4   A:5  
+##  K: 2   K:7   K:5   K:2   K:5   K:4   K:2   K:7   K:7   K:6   K:5   K:3  
+##  V:10   V:2   V:6   V:5   V:5   V:4   V:8   V:5   V:2   V:2   V:6   V:7  
+##                                                                          
+##                                                                          
+##  V173  V174   V175  V176  V177  V178  V179  V180  V181  V182  V183  V184 
+##  A:4   A: 1   A:3   A:3   A:4   A:8   A:5   A:3   A:4   A:3   A:2   A:5  
+##  K:6   K: 4   K:5   K:4   K:5   K:5   K:6   K:7   K:6   K:5   K:5   K:3  
+##  V:5   V:10   V:7   V:8   V:6   V:2   V:4   V:5   V:5   V:7   V:8   V:7  
+##                                                                          
+##                                                                          
+##  V185  V186  V187  V188  V189  V190    V191   V192  V193  V194  V195 
+##  A:6   A:6   A:3   A:6   A:6   A:8   A   :4   A:3   A:4   A:8   A:6  
+##  K:6   K:5   K:6   K:6   K:2   K:2   K   :7   K:6   K:5   K:3   K:2  
+##  V:3   V:4   V:6   V:3   V:7   V:5   V   :3   V:6   V:6   V:4   V:7  
+##                                      NA's:1                          
+##                                                                      
+##  V196  V197  V198  V199  V200  V201  V202    V203   V204  V205  V206 
+##  A:4   A:5   A:2   A:5   A:4   A:3   A:3   A   :4   A:9   A:5   A:6  
+##  K:2   K:5   K:6   K:6   K:4   K:7   K:8   K   :4   K:1   K:2   K:3  
+##  V:9   V:5   V:7   V:4   V:7   V:5   V:4   KA  :1   V:5   V:8   V:6  
+##                                            V   :5                    
+##                                            NA's:1                    
+##  V207  V208  V209  V210  V211  V212  V213  V214  V215  V216  V217  V218 
+##  A:5   A:4   A:7   A:7   A:4   A:9   A:1   A:7   A:6   A:5   A:5   A:4  
+##  K:4   K:6   K:4   K:2   K:4   K:2   K:5   K:4   K:2   K:4   K:2   K:5  
+##  V:6   V:5   V:4   V:6   V:7   V:4   V:9   V:4   V:7   V:6   V:8   V:6  
+##                                                                         
+##                                                                         
+##  V219  V220  V221  V222  V223  V224  V225  V226  V227  V228  V229  V230 
+##  A:7   A:7   A:4   A:6   A:6   A:7   A:3   A:4   A:4   A:6   A:5   A:8  
+##  K:3   K:3   K:3   K:5   K:1   K:2   K:5   K:5   K:5   K:3   K:5   K:2  
+##  V:5   V:5   V:8   V:4   V:8   V:6   V:7   V:6   V:6   V:6   V:5   V:5  
+##                                                                         
+##                                                                         
+##  V231  V232  V233  V234  V235  V236  V237  V238  V239  V240  V241  V242 
+##  A:3   A:5   A:6   A:5   A:7   A:4   A:9   A:5   A:4   A:2   A:5   A:3  
+##  K:4   K:7   K:2   K:6   K:5   K:3   K:4   K:3   K:4   K:4   K:6   K:5  
+##  V:8   V:3   V:7   V:4   V:3   V:8   V:2   V:7   V:7   V:9   V:4   V:7  
+##                                                                         
+##                                                                         
+##    V243   V244  V245  V246  V247  V248  V249  V250  V251  V252  V253 
+##  A   :5   A:6   A:7   A:5   A:4   A:5   A:6   A:7   A:6   A:6   A:7  
+##  K   :4   K:6   V:8   K:1   K:7   K:5   K:4   K:5   K:5   K:4   K:3  
+##  V   :4   V:3         V:9   V:4   V:5   V:5   V:3   V:4   V:5   V:5  
+##  NA's:2                                                              
+##                                                                      
+##  V254  V255    V256   V257  V258    V259  
+##  A:4   A:5   A   :3   A:6   A:6   A   :2  
+##  K:5   K:4   K   :4   K:3   K:6   K   :3  
+##  V:6   V:6   V   :6   V:6   V:3   V   :8  
+##              NA's:2               NA's:2  
+## 
+```
+
+```r
+
+a <- trait_dominant(e)
+s <- summary(as.factor(a))
+t <- round(prop.table(as.table(s)) * 100, 2)
+r <- rbind(s, t)
+row.names(r) <- c("n", "%")
+r
+```
+
+```
+##       A     K   NA      V
+## n 70.00 47.00 36.0 106.00
+## % 27.03 18.15 13.9  40.93
+```
+
+```r
+barplot(r[1, ], main = "Trait dominant (ex-aequo exclu)", ylab = "nombre", sub = "A auditif, K kinesthésique, V visuel (NA = situations où 2 traits sont dominants)")
+```
+
+![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-143.png) 
+
+```r
+
+a <- trait_dominant(e, ties = F)
+s <- summary(as.factor(a))
+t <- round(prop.table(as.table(s)) * 100, 2)
+r <- rbind(s, t)
+row.names(r) <- c("n", "%")
+r
+```
+
+```
+##       A     K      V
+## n 99.00 47.00 113.00
+## % 38.22 18.15  43.63
+```
+
+```r
+barplot(r[1, ])
+```
+
+![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-144.png) 
 
 
 
