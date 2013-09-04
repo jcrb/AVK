@@ -7,12 +7,13 @@ date()
 ```
 
 ```
-## [1] "Wed Aug 14 10:12:27 2013"
+## [1] "Wed Aug 21 09:21:14 2013"
 ```
 
 ```r
-avk <- read.csv("TABLEAU_AVK7.csv", header = TRUE, sep = ",")
+avk <- read.csv("../data/TABLEAU_AVK7.csv", header = TRUE, sep = ",")
 avk$age <- 2013 - avk$année.de.naissance
+
 names(avk)
 ```
 
@@ -246,13 +247,32 @@ On met dans la colonne e$trait, le trait dominant:
 
 ```r
 source("fct.R")
+```
+
+```
+## Warning: impossible d'ouvrir le fichier 'fct.R' : Aucun fichier ou dossier
+## de ce type
+```
+
+```
+## Error: impossible d'ouvrir la connexion
+```
+
+```r
 e$trait <- as.factor(trait_dominant(e))
+```
+
+```
+## Error: impossible de trouver la fonction "trait_dominant"
+```
+
+```r
 summary(e$trait)
 ```
 
 ```
-##   A   K   V 
-##  98  48 113
+## Length  Class   Mode 
+##      0   NULL   NULL
 ```
 
 #### Relation *trait* et *age*:
@@ -262,8 +282,7 @@ tapply(e$age, e$trait, mean, na.rm = T)
 ```
 
 ```
-##     A     K     V 
-## 22.72 23.96 22.77
+## Error: arguments must have same length
 ```
 
 ```r
@@ -271,8 +290,7 @@ tapply(e$age, e$trait, sd, na.rm = T)
 ```
 
 ```
-##     A     K     V 
-## 4.124 6.236 4.163
+## Error: arguments must have same length
 ```
 
 Pas de diddérence entre les groupes
@@ -281,54 +299,82 @@ Pas de diddérence entre les groupes
 
 ```r
 t <- table(e$metier, e$trait)
+```
+
+```
+## Error: all arguments must have the same length
+```
+
+```r
 t
 ```
 
 ```
-##        
-##          A  K  V
-##   DEA    5  6  9
-##   EIADE  8  3  9
-##   EK    27 15 34
-##   EP    32 14 40
-##   ERX   15  5 13
-##   SF    11  5  8
+## function (x) 
+## UseMethod("t")
+## <bytecode: 0x309c920>
+## <environment: namespace:base>
 ```
 
 ```r
 pt <- round(prop.table(t) * 100, 2)
+```
+
+```
+## Error: 'type' (closure) de l'argument incorrect
+```
+
+```r
 pt
 ```
 
 ```
-##        
-##             A     K     V
-##   DEA    1.93  2.32  3.47
-##   EIADE  3.09  1.16  3.47
-##   EK    10.42  5.79 13.13
-##   EP    12.36  5.41 15.44
-##   ERX    5.79  1.93  5.02
-##   SF     4.25  1.93  3.09
+## function (q, df, ncp, lower.tail = TRUE, log.p = FALSE) 
+## {
+##     if (missing(ncp)) 
+##         .Internal(pt(q, df, lower.tail, log.p))
+##     else .Internal(pnt(q, df, ncp, lower.tail, log.p))
+## }
+## <bytecode: 0x312a2c8>
+## <environment: namespace:stats>
 ```
 
 ```r
 barplot(t, beside = T, col = 1:6, main = "Trait dominant et profession", ylab = "nombre", 
     xlab = "A = Auditif, K = Kinesthésique V = Visuel")
+```
+
+```
+## Error: 'height' must be a vector or a matrix
+```
+
+```r
 legend("topleft", 5, pch = 19, bty = "n", horiz = T, legend = c("DEA", "EIADE", 
     "EK", "EP", "ERX", "SF"), cex = 0.8, col = 1:6)
 ```
 
-![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-101.png) 
+```
+## Error: plot.new n'a pas encore été appelé
+```
 
 ```r
 
 barplot(t(t), beside = T, col = 2:4, main = "Trait dominant et profession", 
     ylab = "nombre", xlab = "")
+```
+
+```
+## Error: l'argument n'est pas une matrice
+```
+
+```r
 legend("topleft", 5, pch = 19, bty = "n", horiz = T, legend = c("Auditif", "Kinesthésique", 
     "Visuel"), cex = 0.8, col = 1:3)
 ```
 
-![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-102.png) 
+```
+## Error: plot.new n'a pas encore été appelé
+```
 
 
 Existe t-il un groupe où le trait K est dominant ?  
@@ -343,8 +389,8 @@ summary(as.factor(e$trait))
 ```
 
 ```
-##   A   K   V 
-##  98  48 113
+##   K  NK 
+##   6 253
 ```
 
 On refait le meme calcul pour les autres caractéristiques:
@@ -358,7 +404,7 @@ summary(as.factor(e$traitA))
 
 ```
 ##   A  NA 
-## 244  15
+## 245  14
 ```
 
 ```r
@@ -370,7 +416,7 @@ summary(as.factor(e$traitV))
 
 ```
 ##  NV   V 
-## 247  12
+## 248  11
 ```
 
 #### Conclusion

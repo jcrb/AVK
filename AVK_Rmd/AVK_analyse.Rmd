@@ -3,8 +3,9 @@ AVK Analyse
 
 ```{r}
 date()
-avk<-read.csv("TABLEAU_AVK7.csv",header=TRUE, sep=",")
+avk<-read.csv("../data/TABLEAU_AVK7.csv",header=TRUE, sep=",")
 avk$age<-2013-avk$année.de.naissance
+
 names(avk)
 str(avk)
 summary(avk)
