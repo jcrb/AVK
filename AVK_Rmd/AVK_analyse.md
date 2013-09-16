@@ -7,7 +7,7 @@ date()
 ```
 
 ```
-## [1] "Mon Sep 16 00:15:47 2013"
+## [1] "Mon Sep 16 19:23:02 2013"
 ```
 
 ```r
@@ -437,6 +437,7 @@ On met dans la colonne e$trait, le trait dominant:
 
 ```r
 source("../fct.R")
+#' par défaut la fonction trait dominant élimine les ex-aequo et met NA dans la colonne trait (?)
 e$trait <- as.factor(trait_dominant(e))
 summary(e$trait)
 ```
@@ -514,7 +515,7 @@ legend("topleft", 5, pch = 19, bty = "n", horiz = T, legend = c("DEA", "EIADE",
 ```r
 
 barplot(t(t), beside = T, col = 2:5, main = "Trait dominant et profession", 
-    ylab = "nombre", xlab = "")
+    ylab = "nombre", xlab = "NA correspond aux cas où 2 traits sont ex-aequo")
 legend("topleft", 5, pch = 19, bty = "n", horiz = T, legend = c("Auditif", "Kinesthésique", 
     "NA", "Visuel"), cex = 0.8, col = 2:5)
 ```

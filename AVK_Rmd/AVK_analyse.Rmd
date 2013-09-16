@@ -70,6 +70,7 @@ Hypothèse: dans certains groupes professionnel, une des 3 traits (visuel, kines
 On met dans la colonne e$trait, le trait dominant:
 ```{r}
 source("../fct.R")
+#' par défaut la fonction trait dominant élimine les ex-aequo et met NA dans la colonne trait (?)
 e$trait<-as.factor(trait_dominant(e))
 summary(e$trait)
 ```
@@ -89,7 +90,7 @@ pt
 barplot(t,beside=T,col=1:6,main="Trait dominant et profession",ylab="nombre",xlab="A = Auditif, K = Kinesthésique V = Visuel")
 legend("topleft",5,pch=19,bty="n",horiz=T,legend=c("DEA","EIADE","EK","EP","ERX","SF"),cex=0.8,col=1:6)
 
-barplot(t(t),beside=T,col=2:5,main="Trait dominant et profession",ylab="nombre",xlab="")
+barplot(t(t),beside=T,col=2:5,main="Trait dominant et profession",ylab="nombre",xlab="NA correspond aux cas où 2 traits sont ex-aequo")
 legend("topleft",5,pch=19,bty="n",horiz=T,legend=c("Auditif","Kinesthésique","NA","Visuel"),cex=0.8,col=2:5)
 
 ```
