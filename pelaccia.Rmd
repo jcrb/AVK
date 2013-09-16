@@ -1,0 +1,17 @@
+Données Pelaccia
+========================================================
+
+Légende pour la valeur dominante
+
+1 : auditif
+2 : visuel
+3 : kinesthésique
+4 : mixte auditif - visuel
+5 : questionnaires non renseigné
+6 : mixte visuel - kinesthésique
+7 : mixte visuel - auditif - kinesthésique
+
+```{r data}
+file<-"data/VAK_thierry.csv"
+vak<-read.csv(file,header=TRUE,sep=",")
+```
