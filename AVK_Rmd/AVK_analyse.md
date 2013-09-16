@@ -7,7 +7,7 @@ date()
 ```
 
 ```
-## [1] "Wed Sep  4 10:25:59 2013"
+## [1] "Mon Sep 16 00:15:47 2013"
 ```
 
 ```r
@@ -436,33 +436,14 @@ Hypothèse: dans certains groupes professionnel, une des 3 traits (visuel, kines
 On met dans la colonne e$trait, le trait dominant:
 
 ```r
-source("fct.R")
-```
-
-```
-## Warning: impossible d'ouvrir le fichier 'fct.R' : Aucun fichier ou dossier
-## de ce type
-```
-
-```
-## Error: impossible d'ouvrir la connexion
-```
-
-```r
+source("../fct.R")
 e$trait <- as.factor(trait_dominant(e))
-```
-
-```
-## Error: impossible de trouver la fonction "trait_dominant"
-```
-
-```r
 summary(e$trait)
 ```
 
 ```
-## Length  Class   Mode 
-##      0   NULL   NULL
+##   A   K  NA   V 
+##  70  47  36 106
 ```
 
 #### Relation *trait* et *age*:
@@ -472,7 +453,8 @@ tapply(e$age, e$trait, mean, na.rm = T)
 ```
 
 ```
-## Error: arguments must have same length
+##     A     K    NA     V 
+## 22.41 24.02 23.74 22.63
 ```
 
 ```r
@@ -480,7 +462,8 @@ tapply(e$age, e$trait, sd, na.rm = T)
 ```
 
 ```
-## Error: arguments must have same length
+##     A     K    NA     V 
+## 3.470 6.288 5.744 3.898
 ```
 
 Pas de diddérence entre les groupes
@@ -489,25 +472,18 @@ Pas de diddérence entre les groupes
 
 ```r
 t <- table(e$metier, e$trait)
-```
-
-```
-## Error: all arguments must have the same length
-```
-
-```r
 t
 ```
 
 ```
 ##        
-##          A  K  V
-##   DEA    4  6 10
-##   EIADE  7  5  8
-##   EK    23 29 24
-##   EP    21 26 39
-##   ERX   11  4 18
-##   SF    10  7  7
+##          A  K NA  V
+##   DEA    4  6  1  9
+##   EIADE  3  3  6  8
+##   EK    22 14 10 30
+##   EP    23 14 10 39
+##   ERX    9  5  6 13
+##   SF     9  5  3  7
 ```
 
 ```r
@@ -517,13 +493,13 @@ pt
 
 ```
 ##        
-##             A     K     V
-##   DEA    1.54  2.32  3.86
-##   EIADE  2.70  1.93  3.09
-##   EK     8.88 11.20  9.27
-##   EP     8.11 10.04 15.06
-##   ERX    4.25  1.54  6.95
-##   SF     3.86  2.70  2.70
+##             A     K    NA     V
+##   DEA    1.54  2.32  0.39  3.47
+##   EIADE  1.16  1.16  2.32  3.09
+##   EK     8.49  5.41  3.86 11.58
+##   EP     8.88  5.41  3.86 15.06
+##   ERX    3.47  1.93  2.32  5.02
+##   SF     3.47  1.93  1.16  2.70
 ```
 
 ```r
@@ -537,10 +513,10 @@ legend("topleft", 5, pch = 19, bty = "n", horiz = T, legend = c("DEA", "EIADE",
 
 ```r
 
-barplot(t(t), beside = T, col = 2:4, main = "Trait dominant et profession", 
+barplot(t(t), beside = T, col = 2:5, main = "Trait dominant et profession", 
     ylab = "nombre", xlab = "")
 legend("topleft", 5, pch = 19, bty = "n", horiz = T, legend = c("Auditif", "Kinesthésique", 
-    "Visuel"), cex = 0.8, col = 1:3)
+    "NA", "Visuel"), cex = 0.8, col = 2:5)
 ```
 
 ![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-92.png) 
@@ -558,8 +534,8 @@ summary(as.factor(e$trait))
 ```
 
 ```
-##   K  NK 
-##   6 253
+##   A   K  NA   V 
+##  70  47  36 106
 ```
 
 On refait le meme calcul pour les autres caractéristiques:
@@ -573,7 +549,7 @@ summary(as.factor(e$traitA))
 
 ```
 ##   A  NA 
-## 245  14
+## 244  15
 ```
 
 ```r
@@ -585,7 +561,7 @@ summary(as.factor(e$traitV))
 
 ```
 ##  NV   V 
-## 248  11
+## 247  12
 ```
 
 #### Conclusion
@@ -692,10 +668,10 @@ legend("topleft", 5, pch = 19, bty = "n", horiz = T, legend = c("DEA", "EIADE",
 
 ```r
 
-barplot(t(t), beside = T, col = 2:4, main = "Trait dominant et profession", 
+barplot(t(t), beside = T, col = 2:5, main = "Trait dominant et profession", 
     ylab = "nombre", xlab = "")
 legend("topleft", 5, pch = 19, bty = "n", horiz = T, legend = c("Auditif", "Kinesthésique", 
-    "Visuel"), cex = 0.6, col = 1:3)
+    "NA", "Visuel"), cex = 0.6, col = 2:5)
 ```
 
 ![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-142.png) 
@@ -901,9 +877,9 @@ r
 ```
 
 ```
-##       A     K      V
-## n 99.00 47.00 113.00
-## % 38.22 18.15  43.63
+##       A     K NA      V
+## n 99.00 47.00  0 113.00
+## % 38.22 18.15  0  43.63
 ```
 
 ```r
