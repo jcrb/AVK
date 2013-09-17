@@ -7,7 +7,7 @@ date()
 ```
 
 ```
-## [1] "Mon Sep 16 19:23:02 2013"
+## [1] "Tue Sep 17 15:28:44 2013"
 ```
 
 ```r
@@ -514,13 +514,33 @@ legend("topleft", 5, pch = 19, bty = "n", horiz = T, legend = c("DEA", "EIADE",
 
 ```r
 
-barplot(t(t), beside = T, col = 2:5, main = "Trait dominant et profession", 
+barplot(pt, beside = T, col = 1:6, main = "Trait dominant et profession", ylab = "Pourcentage", 
+    xlab = "A = Auditif, K = Kinesthésique V = Visuel")
+legend("topleft", 5, pch = 19, bty = "n", horiz = T, legend = c("DEA", "EIADE", 
+    "EK", "EP", "ERX", "SF"), cex = 0.8, col = 1:6)
+```
+
+![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-92.png) 
+
+```r
+
+barplot(t(t), beside = T, col = 2:5, main = "Profession et trait dominant", 
     ylab = "nombre", xlab = "NA correspond aux cas où 2 traits sont ex-aequo")
 legend("topleft", 5, pch = 19, bty = "n", horiz = T, legend = c("Auditif", "Kinesthésique", 
     "NA", "Visuel"), cex = 0.8, col = 2:5)
 ```
 
-![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-92.png) 
+![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-93.png) 
+
+```r
+
+barplot(t(pt), beside = T, col = 2:5, main = "Profession et trait dominant", 
+    ylab = "nombre", xlab = "NA correspond aux cas où 2 traits sont ex-aequo")
+legend("topleft", 5, pch = 19, bty = "n", horiz = T, legend = c("Auditif", "Kinesthésique", 
+    "NA", "Visuel"), cex = 0.8, col = 2:5)
+```
+
+![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-94.png) 
 
 
 Existe t-il un groupe où le trait K est dominant ?  
@@ -869,6 +889,14 @@ barplot(r[1, ], main = "Trait dominant (ex-aequo exclu)", ylab = "nombre", sub =
 
 ```r
 
+barplot(r[2, ], main = "Trait dominant (ex-aequo exclu)", ylab = "Pourcentage (%)", 
+    sub = "A auditif, K kinesthésique, V visuel (NA = situations où 2 traits sont dominants)")
+```
+
+![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-144.png) 
+
+```r
+
 a <- trait_dominant(e, ties = F)
 s <- summary(as.factor(a))
 t <- round(prop.table(as.table(s)) * 100, 2)
@@ -884,10 +912,35 @@ r
 ```
 
 ```r
-barplot(r[1, ])
+barplot(r[1, ], main = "Trait dominant (ex-aequo inclus)", ylab = "Nombre", 
+    sub = "A auditif, K kinesthésique, V visuel")
 ```
 
-![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-144.png) 
+![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-145.png) 
+
+```r
+barplot(r[2, ], main = "Trait dominant (ex-aequo inclus)", ylab = "Pourcentage (%)", 
+    sub = "A auditif, K kinesthésique, V visuel")
+```
+
+![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-146.png) 
+
+
+```
+## % latex table generated in R 2.15.1 by xtable 1.7-1 package
+## % Tue Sep 17 15:28:47 2013
+## \begin{table}[ht]
+## \centering
+## \begin{tabular}{rrrrr}
+##   \hline
+##  & A & K & NA & V \\ 
+##   \hline
+## n & 99.00 & 47.00 & 0.00 & 113.00 \\ 
+##   \% & 38.22 & 18.15 & 0.00 & 43.63 \\ 
+##    \hline
+## \end{tabular}
+## \end{table}
+```
 
 
 
