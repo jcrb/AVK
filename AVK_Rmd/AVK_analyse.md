@@ -7,7 +7,7 @@ date()
 ```
 
 ```
-## [1] "Tue Sep 17 15:28:44 2013"
+## [1] "Tue Sep 17 18:54:50 2013"
 ```
 
 ```r
@@ -385,22 +385,39 @@ tapply(e$V, e$metier, mean)
 ```
 
 ```r
-boxplot(e$A ~ e$metier)
+print("Les boxplot qui suivent expriment le nombre de fois ou des réponses correspondant à un trait spécifique (auditif, visuel, kinesthésique) ont été choisies, selon la catégorie socio-professionnelle. Pour chaque question, le choix verie entre 0 et 15.")
+```
+
+```
+## [1] "Les boxplot qui suivent expriment le nombre de fois ou des réponses correspondant à un trait spécifique (auditif, visuel, kinesthésique) ont été choisies, selon la catégorie socio-professionnelle. Pour chaque question, le choix verie entre 0 et 15."
+```
+
+```r
+boxplot(e$A ~ e$metier, main = "Choix AUDITIF")
 ```
 
 ![plot of chunk metier](figure/metier1.png) 
 
 ```r
-boxplot(e$K ~ e$metier)
+boxplot(e$K ~ e$metier, main = "Choix KINESTHESIE")
 ```
 
 ![plot of chunk metier](figure/metier2.png) 
 
 ```r
-boxplot(e$V ~ e$metier)
+boxplot(e$V ~ e$metier, main = "Choix VISUEL")
 ```
 
 ![plot of chunk metier](figure/metier3.png) 
+
+```r
+
+print("Pas de différence en moyenne entre les hommes et la femmes sur le choix d'une composante:")
+```
+
+```
+## [1] "Pas de différence en moyenne entre les hommes et la femmes sur le choix d'une composante:"
+```
 
 ```r
 tapply(e$A, e$sexe, mean)
@@ -928,7 +945,7 @@ barplot(r[2, ], main = "Trait dominant (ex-aequo inclus)", ylab = "Pourcentage (
 
 ```
 ## % latex table generated in R 2.15.1 by xtable 1.7-1 package
-## % Tue Sep 17 15:28:47 2013
+## % Tue Sep 17 18:54:52 2013
 ## \begin{table}[ht]
 ## \centering
 ## \begin{tabular}{rrrrr}
